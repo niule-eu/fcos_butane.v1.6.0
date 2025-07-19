@@ -1,0 +1,39 @@
+module Resource
+
+import "./Generic.pkl"
+
+
+inline: String?
+
+`local`: String?
+
+source: String?
+
+compression: ("null"|"gzip")?
+
+http_headers: Listing<Generic.HTTPHeader>?
+
+verification: Generic.Verification?
+
+local props = this
+
+
+_validate = Generic.mutuallyExclusive(Set("inline", "local", "source"), props)
+
+// output {
+//   value = new ConfigProperties {
+//     when (props.inline != null) {
+//         inline = inline
+//     }
+//     when (props.inline == null && props.`local` != null) {
+//         `local` = `local`
+//     }
+//     when (props.inline == null && props.`local` == null && props.source != null) {
+//         source = source
+//     }
+
+//     compression = props.compression
+//     http_headers = props.http_headers
+//     verification = props.verification
+//   }
+// }

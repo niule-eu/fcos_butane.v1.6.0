@@ -1,0 +1,65 @@
+module ButaneFcos
+
+import "./Ignition.pkl"
+import "./Storage.pkl"
+import "./Systemd.pkl"
+import "./Passwd.pkl"
+import "./Generic.pkl"
+import "./Resource.pkl"
+import "pkl:yaml"
+
+class GrubUser {
+  name : String
+  password_hash : String?
+}
+
+class Grub {
+  users : Mapping<String, GrubUser>?
+}
+
+class BootDevice {
+  _validate = TODO()
+}
+
+class KernelArguments {
+  should_exist : Listing<String>?
+  should_not_exist : Listing<String>?
+}
+
+fixed variant = "fcos"
+fixed version = "1.6.0"
+
+
+grub : Grub?
+kernel_arguments : KernelArguments?
+boot_device : BootDevice?
+ignition : Ignition?
+storage : Storage?
+systemd : Systemd?
+passwd : Passwd
+
+const function mappingRenderer(obj) = obj.ifNonNull((item) -> item.toMap().values.toListing())
+
+output {
+  renderer = new YamlRenderer {
+    mode = "1.2"
+    converters {
+      ["passwd.users"] = (obj : Mapping<String, Passwd.User>?) -> mappingRenderer(obj)
+      ["passwd.groups"] = (obj : Mapping<String, Passwd.Group>?) -> mappingRenderer(obj)
+      ["systemd.units"] = (obj : Mapping<String, Systemd.Unit>?) -> mappingRenderer(obj)
+      ["systemd.units[*].dropins"] = (obj : Mapping<String, Systemd.Dropin>?) -> mappingRenderer(obj)
+      ["storage.disks"] = (obj : Mapping<String, Storage.Disk>?) -> mappingRenderer(obj)
+      ["storage.disks[*].partitions"] = (obj : Mapping<String, Storage.Partition>?) -> mappingRenderer(obj)
+      ["storage.raid"] = (obj : Mapping<String, Storage.Raid>?) -> mappingRenderer(obj)
+      ["storage.filesystems"] = (obj : Mapping<String, Storage.Filesystem>?) -> mappingRenderer(obj)
+      ["storage.files"] = (obj : Mapping<String, Storage.File>?) -> mappingRenderer(obj)
+      ["storage.directories"] = (obj : Mapping<String, Storage.Directory>?) -> mappingRenderer(obj)
+      ["storage.links"] = (obj : Mapping<String, Storage.Link>?) -> mappingRenderer(obj)
+      ["storage.trees"] = (obj : Mapping<String, Storage.Tree>?) -> mappingRenderer(obj)
+      ["grub.users"] = (obj : Mapping<String, GrubUser>?) -> mappingRenderer(obj)
+      ["ignition.config.merge"] = (obj : Mapping<String, Resource>?) -> mappingRenderer(obj)
+      ["ignition.security.tls.certificate_authorities"] = (obj : Mapping<String, Resource>?) -> mappingRenderer(obj)
+      [Generic.UnixOctal] = (obj : Generic.UnixOctal) -> new RenderDirective { text = " \(obj.value)" }
+    }
+  }
+}

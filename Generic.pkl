@@ -1,0 +1,28 @@
+module Generic
+
+class HTTPHeader {
+  name: String
+  value: String?
+}
+
+class Verification {
+  hash: String?
+}
+
+class UnixOctal {
+  value: String
+  _validate = 
+    if (value.startsWith("0o")) null else throw("Octal must start with '0o'.")
+}
+
+function mutuallyExclusive(properties: Set<String>, obj: Typed|Dynamic) =
+  let (list = properties.fold(List(), (acc : List, item : String) -> acc.add(obj.getProperty(item))))
+    if (list.filterNonNull().length > 1) 
+      throw("Must provide at most one of \(properties.join(", "))")
+    else null
+
+function oneOf(properties: Set<String>, obj: Typed|Dynamic) =
+  let (list = properties.fold(List(), (acc : List, item : String) -> acc.add(obj.getProperty(item))).filterNonNull())
+    if (list.length != 1) 
+      throw("Must provide exactly one of \(properties.join(", "))")
+    else null

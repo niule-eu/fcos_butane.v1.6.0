@@ -1,0 +1,94 @@
+module Storage
+
+import "./Generic.pkl"
+import "./Resource.pkl"
+
+class Partition {
+  label : String?
+  number : UInt16?
+  size_mib : UInt16?
+  start_mib : UInt16?
+  type_guid : String?
+  guid : String?
+  wipe_partition_entry : Boolean?
+  should_exist : Boolean?
+  resize : Boolean?
+}
+
+class Disk {
+  device : String
+  wipe_table : Boolean?
+  partitions: Mapping<String, Partition>?
+}
+
+class Raid {
+  name : String
+  level : String
+  devices : Listing<String>
+  spares : UInt8?
+  options : Listing<String>?
+}
+
+class Filesystem {
+  device : String
+  format : ("ext4"|"btrfs"|"xfs"|"vfat"|"swap"|"none")
+  path : String?
+  wipe_filesystem : Boolean?
+  label : String?
+  uuid : String?
+  options : Listing<String>?
+  mount_options : Listing<String>?
+  with_mount_unit : Boolean?
+}
+
+class User {
+  id : UInt16?
+  name : String?
+  
+  local props = this
+
+  _validate = 
+    let (_ = Generic.oneOf(Set("id", "name"), this))
+      null
+}
+
+typealias Group = User
+
+abstract class FileDescriptor {
+  path : String
+  overwrite : Boolean?
+  mode : Generic.UnixOctal?
+  user : User?
+  group : Group?
+}
+
+class File extends FileDescriptor {
+  contents : Resource?
+  appends : Listing<Resource>?
+}
+
+class Directory extends FileDescriptor {}
+
+class Link extends FileDescriptor {
+  target : String
+  hard : Boolean
+}
+
+class Tree {
+  `local` : String
+  path : String?
+}
+
+class Luks {
+  _validate = TODO()
+}
+
+disks : Mapping<String, Disk>?
+raid : Mapping<String, Raid>?
+filesystems : Mapping<String, Filesystem>?
+files : Mapping<String, File>?
+directories : Mapping<String, Directory>?
+links : Mapping<String, Link>?
+trees : Mapping<String, Tree>?
+luks : Mapping<String, Luks>?
+

@@ -1,0 +1,7 @@
+amends "pkl:test"
+
+examples {
+  ["lorem-ipsum.pkl"] {
+    import("../examples/lorem-ipsum.pkl").output.text
+  }
+}

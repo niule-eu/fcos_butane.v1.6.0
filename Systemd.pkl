@@ -1,0 +1,29 @@
+module Systemd
+
+import "./Generic.pkl"
+
+
+class Dropin {
+  name : String
+  contents : String?
+  contents_local : String?
+
+  _validate = 
+    let (_ = Generic.oneOf(Set("contents", "contents_local"), this))
+      null
+}
+
+class Unit {
+  name : String
+  enabled : Boolean?
+  mask : Boolean?
+  contents : String?
+  contents_local : String?
+  dropins : Mapping<String, Dropin>?
+
+  _validate = 
+    let (_ = Generic.oneOf(Set("contents", "contents_local"), this))
+      null
+}
+
+units : Mapping<String, Unit>?

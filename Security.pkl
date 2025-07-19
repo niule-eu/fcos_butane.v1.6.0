@@ -1,0 +1,10 @@
+module Security
+
+import "./Resource.pkl"
+
+
+class Tls {
+  certificate_authorities : Listing<Resource>?
+}
+
+tls : Tls?

@@ -1,0 +1,32 @@
+module Ignition
+
+import "./Resource.pkl"
+
+class Config {
+  merge: Mapping<String, Resource>?
+  replace: Resource?
+}
+
+class Timeouts {
+  http_response_headers : UInt16?
+  http_total : UInt16?
+}
+
+class Tls {
+  certificate_authorities : Mapping<String, Resource>?
+}
+
+class Security {
+  tls : Tls?
+}
+
+class Proxy {
+  http_proxy : String?
+  https_proxy : String?
+  no_proxy : Listing<String>?
+}
+
+config : Config?
+timeouts : Timeouts?
+security : Security?
+proxy : Proxy?

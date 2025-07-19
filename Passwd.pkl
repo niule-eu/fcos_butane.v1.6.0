@@ -1,0 +1,39 @@
+module Passwd
+
+import "./Generic.pkl"
+import "pkl:yaml"
+
+class User {
+  name : String
+  password_hash : String?
+  ssh_authorized_keys : Listing<String>?
+  ssh_authorized_keys_local : Listing<String>?
+  uid : UInt16?
+  gecos : String?
+  home_dir : String?
+  no_create_home : Boolean?
+  primary_group : String?
+  groups : Listing<String>?
+  no_user_group : Boolean?
+  no_log_init : Boolean?
+  shell : String?
+  should_exist : Boolean?
+  system : Boolean?
+
+  _validate = 
+    let (_ = Generic.mutuallyExclusive(Set("ssh_authorized_keys", "ssh_authorized_keys_local"), this))
+    let (_ = this.ssh_authorized_keys.ifNonNull((v : Listing<String>) -> if (v.toSet().length == v.length) null else throw("ssh_authorized_keys must be unique.") ))
+    let (_ = this.ssh_authorized_keys_local.ifNonNull((v : Listing<String>) -> if (v.toSet().length == v.length) null else throw("ssh_authorized_keys_local must be unique.") ))
+      null
+}
+
+class Group {
+  name : String
+  gid : UInt16?
+  password_hash : String?
+  should_exist : Boolean?
+  system : Boolean?
+}
+
+users : Mapping<String, User>?
+groups : Mapping<String, Group>?

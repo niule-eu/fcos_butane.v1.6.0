@@ -1,0 +1,78 @@
+amends "../ButaneFcos.pkl" 
+
+ignition {
+  config {
+    merge {
+      ["base"] {
+        source = "lala"
+        compression = "gzip"
+      } 
+    }
+  }
+  security {
+    tls {
+      certificate_authorities {
+        ["google"] {
+          source = "bpb"
+        }
+      }
+    }
+  }
+}
+
+passwd {
+  users {
+    ["test"] {
+      name = "test"
+    }
+  }
+  groups {
+    ["test2"] {
+      name = "test2"
+    }
+  }
+}
+
+systemd {
+  units {
+    ["test"] {
+      name = "test"
+      contents = "test"
+      dropins {
+        ["test_dropin"] {
+          name = "test_dropin"
+          contents = "test"
+        }
+      }
+    }
+  }
+}
+
+storage {
+  disks {
+    ["/dev/sda"] {
+      device = "/dev/sda"
+      partitions {
+        ["1"] {
+          label = "1"
+        }
+      }
+    }
+  }
+  filesystems {
+    ["/dev/sda"] {
+      device = "/dev/sda"
+      format = "btrfs"
+    }
+  }
+  files {
+    ["test"] {
+      path = "/etc/test"
+    }
+  }
+  directories {
+    ["test"] {
+      path = "/etc/test"
+    }
+  }
+}
