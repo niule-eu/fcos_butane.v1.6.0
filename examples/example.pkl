@@ -1,4 +1,4 @@
-amends "../ButaneFcos.pkl" 
+amends "../ButaneFcos.pkl"
 
 ignition {
   config {
