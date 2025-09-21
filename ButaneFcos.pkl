@@ -1,4 +1,4 @@
-module ButaneFcos
+open module ButaneFcos
 
 import "./Ignition.pkl"
 import "./Storage.pkl"
