@@ -22,7 +22,7 @@ class Unit {
   dropins : Mapping<String, Dropin>?
 
   _validate = 
-    let (_ = Generic.oneOf(Set("contents", "contents_local"), this))
+    let (_ = Generic.mutuallyExclusive(Set("contents", "contents_local"), this))
       null
 }
 
